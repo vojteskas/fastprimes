@@ -1,8 +1,16 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct node{
+	int value;
+	struct node * next;
+}node_t;
+
 node_t * newnode(int val){						
 	node_t * new = malloc(sizeof(node_t));
 	
 	if (new == NULL){
-		printf("Chyba tvoreni nove casti linked listu. Vracim NULL!");
+		fprintf(stderr, "Cannot allocate memory. Returning NULL!");
 		return NULL;
 	}
 	new->value = val;
@@ -17,26 +25,29 @@ void append(node_t * current, int val){
 	}
 	
 	current->next = newnode(val);
+	
+	if(current->next == NULL){
+		fprintf(stderr, "Cannot append! Exiting!\n");
+		exit(3);
+	}
 }
 
 void freelist(node_t * head){
-	node_t * iterator = head->next;
-	free(head);
-	for(node_t * current = iterator; iterator != NULL; current = current->next){
-		iterator = current->next;
-		free(current);
+	while(head != NULL){
+		node_t * iterator = head->next;
+		free(head);
+		head = iterator;
 	}
 }
 
 void printlist(node_t * head){
 	if(head == NULL){
-		printf("Pointing to null, invalid list to print. Exiting!\n");
+		fprintf(stderr, "Pointing to null, invalid list to print.\n");
 		return;
 	}
-		
-	printf("Printing linked list:\n");
+	
+	fprintf(stderr, "Printing linked list:\n");
 	for(;head->next != NULL; head = head->next){
 		printf("%d\n", head->value);
 	}
-	return;
 }

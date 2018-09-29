@@ -1,44 +1,42 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include "linkedlist.h"
-#include "linkedlist.c"
-					
-#define END 500								//Az do jakeho cisla ma zjistovat
-									//zda se jedna o prvocislo
-void primes(int input, node_t * head);
-void countAllPrimes(node_t * head);
+
+#define END 500  //Az do jakeho cisla ma zjistovat zda se jedna o prvocislo
+
+bool is_prime(int input, node_t * head);
+void find_primes(node_t * head, const size_t end);
 
 int main(){
-	node_t * head = newnode(2);					//Vytvori zacatek listu pro
-									//ukladani prvocisel
+	node_t * head = newnode(2);  //Vytvori zacatek listu pro ukladani prvocisel
 	
-	countAllPrimes(head);						//Najde vsechny prvocisla az
-									//do velikosti END
+	find_primes(head, END);  //Najde vsechny prvocisla az do velikosti END
 	
-	printlist(head);						//Vypisi prvocisla
-	freelist(head);							//Uvolni pamet l. listu
+	printlist(head);  //Vypisi prvocisla
+	freelist(head);  //Uvolni pamet l. listu
 	
 	return 0;
 }
 
-void primes(int input, node_t * head){		//Zjistim zda se jedna o prvocislo nebo ne
-	for(node_t * current = head; current->value < input; current = current->next){
+bool is_prime(int input, node_t * head){	//Zjistim zda se jedna o prvocislo nebo ne
+	for(node_t * current = head; current->value < input && current->next != NULL; current = current->next){
 		if((input % current->value) == 0){
-			printf("Cislo %d neni prvocislo\n", input);
-			return;
-		}
-		if(current->next == NULL){
-			break;
+			return false;
 		}
 	}
-	printf("Cislo %d je prvocislo!!\n", input);
-	append(head, input);						//Nove zjistene prvocislo pridam do linked listu
-	return;
+	
+	return true;
 }
 
-void countAllPrimes(node_t * head){					//Zjistuji pro vsechna cisla az do END
-	for(int i = 3; i < END; i++){
-		primes(i, head);
+void find_primes(node_t * head, const size_t end){
+	for(long unsigned int i = 3; i < end; i++){
+		if((is_prime(i, head)) == true){
+			append(head, i);
+			fprintf(stderr, "Number %ld is prime\n", i);
+		}
+		else{
+			fprintf(stderr, "Number %ld is not prime\n", i);
+		}
 	}
-	return;
 }
