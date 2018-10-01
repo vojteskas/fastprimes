@@ -4,6 +4,6 @@ typedef struct node{
 }node_t;
 
 node_t * newnode();
-void append(node_t * current, int val);
+int append(node_t * current, int val);
 void freelist(node_t * current);
 void printlist(node_t * head);
